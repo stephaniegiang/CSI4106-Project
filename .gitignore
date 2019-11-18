@@ -1,0 +1,7 @@
+venv/
+*.ipynb
+.idea
+.ipynb_checkpoints
+Dtree.ipynb
+Quieries.txt
+*.csv

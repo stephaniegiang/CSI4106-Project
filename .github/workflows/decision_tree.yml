@@ -20,13 +20,14 @@ jobs:
     - name: Train algoritm 
       run: |
         python DTree.py
-        cat predictions.csv
-    - name: Generate predictions
-      uses: stefanzweifel/git-auto-commit-action@v2.3.0
+    - name: Commit files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "Add new csv"
+    - name: Push new files
+      uses: ad-m/github-push-action@v0.5.0
       with:
-        commit_message: "Prediction CSV" 
-        file_pattern: \*.csv
-        branch: ${{ github.head_ref }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         

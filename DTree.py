@@ -14,12 +14,12 @@ from sklearn.neural_network import MLPClassifier
 # In[2]:
 
 
-X = pd.read_csv("data.csv")
+X = pd.read_csv('data.csv')
 # X.head(10)
 y = X.pop("SalePrice").values
 X.pop('Id') #not needed
 
-X2 = pd.read_csv("test.csv")
+X2 = pd.read_csv('test.csv')
 ids = X2.pop('Id') #not needed
 
 def split(number_of_features=10, seed = 0):

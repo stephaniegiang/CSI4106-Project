@@ -4,4 +4,3 @@ venv/
 .ipynb_checkpoints
 Dtree.ipynb
 Quieries.txt
-*.csv

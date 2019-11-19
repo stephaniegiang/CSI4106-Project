@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
 
 import pandas as pd
 import sklearn
@@ -21,12 +16,11 @@ from sklearn.neural_network import MLPClassifier
 
 X = pd.read_csv("data.csv")
 # X.head(10)
-y = X.pop("saleprice").values
-X.pop('id') #not needed
+y = X.pop("SalePrice").values
+X.pop('Id') #not needed
 
-
-# In[3]:
-
+X2 = pd.read_csv("test.csv")
+ids = X2.pop('Id') #not needed
 
 def split(number_of_features=10, seed = 0):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=1)
@@ -44,10 +38,6 @@ def split(number_of_features=10, seed = 0):
     X_test = X_test[randomFeatures].copy()
     
     return randomFeatures, X_train, X_test, y_train, y_test
-
-
-# In[4]:
-
 
 def is_number(s):
     """ Returns True is string is a number. """
@@ -68,16 +58,12 @@ def replace_Na(data):
                 replace = ""
 #         print(col,":",data[col].loc[index], "with -->",replace,"<--")
         data[col].fillna(replace,inplace=True)
-            
 
-
-# In[5]:
-
-
-def encode(train, test):
+def encode(train, test, out=False):
     replace_Na(train)
     replace_Na(test)
-    
+    if out:
+        train.to_csv("traindata.csv", index=False, header=True)
     ohe = OneHotEncoder(sparse=False, handle_unknown='ignore')
 
     ohe.fit(train)
@@ -87,11 +73,6 @@ def encode(train, test):
     
     return X_train_encoded, X_test_encoded
 
-
-# In[6]:
-
-
-#   y_train: The target values of the training set
 def train_model(clf, X_train, y_train, epochs=3):
     scores = []
     print("Starting training...")
@@ -103,17 +84,46 @@ def train_model(clf, X_train, y_train, epochs=3):
     print("Done training.")
     return scores
 
+def get_clf():
+    return DecisionTreeClassifier(random_state=1)
 
-# In[7]:
+def run_best(best_features, epochs, filename):
+    clf = get_clf()
+    # features, train, test, y_train, y_test = split(number_of_feat, seed)
+    train = X[best_features].copy()
+    test = X2[best_features].copy()
+
+    print("***encoding Test Data***")
+
+    train_encoded, test_encoded = encode(train, test, True)
+
+    clf_scores = train_model(clf, train_encoded, y, epochs)
+
+    print("\nDone training, Scores:\n", clf_scores)
+
+    print("\npredicting and saving to",filename)
+
+    y_predicted = clf.predict(test_encoded)
+
+    df = pd.DataFrame(columns=['Id', 'SalePrice'])
+
+    for i in range(len(y_predicted)):
+        df.loc[i] = [ids[i],y_predicted[i]]
+
+    df.to_csv(filename, index=None, header=True)
+
 
 
 def run_sim():
     scores = 0
     bfeatures = []
-    for i in range(1000):
+    seed = 0
+    number_of_feat = 0
+    epochs = 4
+    for i in range(10):
             
         #initially default parameters
-        clf = DecisionTreeClassifier(random_state=1)
+        clf = get_clf()
         # clf = MLPClassifier(solver='lbfgs', alpha=1e-4, hidden_layer_sizes=(150, 150), random_state=1, max_iter=150,
         #               learning_rate_init=0.1, warm_start=False)
         num_feat = random.randint(1,40)
@@ -125,7 +135,7 @@ def run_sim():
         train_encoded, test_encoded = encode(train, test)
         
 
-        clf_scores = train_model(clf, train_encoded, y_train, 4)
+        clf_scores = train_model(clf, train_encoded, y_train, epochs)
         
         print("\nDone training, Scores:\n",clf_scores)
 
@@ -141,12 +151,21 @@ def run_sim():
         if test_score > scores:
             bfeatures = features
             scores = test_score
+            seed = i
+            number_of_feat = num_feat
 
         print("\ncurrent Score:",test_score)
         print("\nbest Score:",scores,"\n")
 
     
     print("\n\n best features:", bfeatures)
+    print('best score:',scores)
+    print('seed:',seed)
+
+    run_best(bfeatures,epochs,"predictions.csv")
+
+
+
 
 
 # In[8]:

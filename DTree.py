@@ -1,14 +1,12 @@
 
 import pandas as pd
 import sklearn
-import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 from sklearn.preprocessing import OneHotEncoder
 import random
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeRegressor
 import datetime
-from sklearn.neural_network import MLPClassifier
 
 
 # In[2]:
@@ -48,15 +46,16 @@ def is_number(s):
         return False
     
 def replace_Na(data):
+    type(data)
     clist = data.columns[data.isna().any()].tolist()
     for col in clist:
         index = data[col].first_valid_index()
         replace = 0
-        if index:
+        if index is not None:
             first_valid_value = data[col].loc[index]
             if not is_number(str(first_valid_value)):
                 replace = ""
-#         print(col,":",data[col].loc[index], "with -->",replace,"<--")
+        # print(col,":",data[col].loc[index], "with -->",replace,"<--")
         data[col].fillna(replace,inplace=True)
 
 def encode(train, test, out=False):
@@ -85,7 +84,7 @@ def train_model(clf, X_train, y_train, epochs=3):
     return scores
 
 def get_clf():
-    return DecisionTreeClassifier(random_state=1)
+    return DecisionTreeRegressor()
 
 def run_best(best_features, epochs, filename):
     clf = get_clf()
@@ -95,7 +94,7 @@ def run_best(best_features, epochs, filename):
 
     print("***encoding Test Data***")
 
-    train_encoded, test_encoded = encode(train, test, True)
+    train_encoded, test_encoded = encode(train, test)
 
     clf_scores = train_model(clf, train_encoded, y, epochs)
 

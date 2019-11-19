@@ -18,7 +18,7 @@ y = X.pop("SalePrice").values
 X.pop('Id') #not needed
 
 X2 = pd.read_csv("test.csv")
-ids = X2.pop('Id') #not needed
+ids = X2.pop('Id').values #not needed
 
 def split(number_of_features=10, seed = 0):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=1)
@@ -109,6 +109,10 @@ def run_best(best_features, epochs, filename):
     for i in range(len(y_predicted)):
         df.loc[i] = [ids[i],y_predicted[i]]
 
+    df = df.astype({'Id':int})
+
+    print(df.dtypes)
+
     df.to_csv(filename, index=None, header=True)
 
 
@@ -119,7 +123,7 @@ def run_sim():
     seed = 0
     number_of_feat = 0
     epochs = 4
-    for i in range(10):
+    for i in range(100):
             
         #initially default parameters
         clf = get_clf()

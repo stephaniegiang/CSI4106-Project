@@ -26,6 +26,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Train algoritm 
       run: |
+        pwd
         python DTree.py
     - name: Generate predictions
       uses: stefanzweifel/git-auto-commit-action@v2.3.0

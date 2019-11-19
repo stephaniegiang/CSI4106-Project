@@ -124,13 +124,13 @@ def run_sim():
     seed = 0
     number_of_feat = 0
     epochs = 4
-    for i in range(100):
+    for i in range(1000):
             
         #initially default parameters
         clf = get_clf()
         # clf = MLPClassifier(solver='lbfgs', alpha=1e-4, hidden_layer_sizes=(150, 150), random_state=1, max_iter=150,
         #               learning_rate_init=0.1, warm_start=False)
-        num_feat = random.randint(1,40)
+        num_feat = random.randint(1,79)
         
         features, train, test, y_train, y_test = split(num_feat,i)
         

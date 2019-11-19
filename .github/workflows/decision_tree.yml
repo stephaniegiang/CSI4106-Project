@@ -20,7 +20,7 @@ jobs:
     - name: Train algoritm 
       run: |
         python DTree.py
-        git add .
+        cat predictions.csv
     - name: Generate predictions
       uses: stefanzweifel/git-auto-commit-action@v2.3.0
       with:

@@ -34,4 +34,6 @@ jobs:
         commit_message: "Prediction CSV" 
         commit_options: '--no-verify --signoff'
         branch: ${{ github.head_ref }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         

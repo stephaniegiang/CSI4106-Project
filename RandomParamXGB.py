@@ -84,7 +84,7 @@ skf = StratifiedKFold(n_splits=folds, shuffle = True, random_state = 1001)
 random_search = RandomizedSearchCV(xgbA, param_distributions=params,
                                    n_iter=param_comb,
                                    scoring='neg_mean_squared_error',
-                                   n_jobs=4, cv=skf.split(train_encoded,y_train),
+                                   n_jobs=1, cv=skf.split(train_encoded,y_train),
                                    verbose=3, random_state=1001 )
 
 random_search.fit(train_encoded, y_train)

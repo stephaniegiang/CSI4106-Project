@@ -25,7 +25,7 @@ def split_train_test(number_of_features=10, seed = 0):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=1)
     random.seed=seed
 
-    randomFeatures = random.sample(list(X), number_of_features)
+    randomFeatures = list(X)
 
     X_train = X_train[randomFeatures].copy()
     X_test = X_test[randomFeatures].copy()
@@ -121,7 +121,7 @@ def find_best_feat(clf):
   for i in range(runs):
     num_feat = random.randint(1,79)
     
-    features, train, test, y_train, y_test = split_train_test(num_feat,i)
+    features, train, test, y_train, y_test = split_train_test(number_of_feat,i)
     train_encoded, test_encoded = encode(train, test)
     train_model(clf, train_encoded, y_train, epochs)
 
@@ -147,13 +147,13 @@ def get_random_forest_v1():
   return RandomForestRegressor(n_estimators=20)
 
 def get_random_forest_v2():
-  return RandomForestRegressor(n_estimators=500)
+  return RandomForestRegressor(n_estimators=100, max_depth=7, random_state=0)
 
 def get_decision_tree_v1():
   return DecisionTreeRegressor()
 
 def get_decision_tree_v2():
-  return DecisionTreeRegressor(criterion='mae')
+  return DecisionTreeRegressor()
 
 def get_xgb_v1():
   return xgb.XGBRegressor(learning_rate=0.01,n_estimators=3460,
@@ -174,4 +174,3 @@ def get_xgb_v2():
     reg_alpha=0.00006)
 
 find_best_feat(get_random_forest_v1())
-

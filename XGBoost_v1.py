@@ -1,4 +1,3 @@
-
 import pandas as pd
 import sklearn
 from sklearn.model_selection import train_test_split
@@ -8,32 +7,19 @@ import random
 from sklearn.tree import DecisionTreeRegressor
 import datetime
 import xgboost as xgb
+from sklearn.metrics import mean_squared_error
+import math
 
-
-# In[2]:
-
-
-X = pd.read_csv('data.csv')
-# X.head(10)
+X = pd.read_csv(r'C:\Users\owner\Downloads\trainingset_v2.csv')
 y = X.pop("SalePrice").values
 X.pop('Id') #not needed
-
-
 X2 = pd.read_csv('test.csv')
 ids = X2.pop('Id') #not needed
 
 def split(number_of_features=10, seed = 0):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=1)
-
-#     print(X_train.shape)
-#     print(y_test.shape)
     random.seed=seed
-
     randomFeatures = random.sample(list(X), number_of_features)
-#     print(randomFeatures)
-
-    # TO DO - Finish the remaining encoding process
-
     X_train = X_train[randomFeatures].copy()
     X_test = X_test[randomFeatures].copy()
     
@@ -90,7 +76,7 @@ def get_clf():
                                      max_depth=3, min_child_weight=0,
                                      gamma=0, subsample=0.7,
                                      colsample_bytree=0.7,
-                                     objective='reg:linear', nthread=-1,
+                                     objective='reg:squarederror', nthread=-1,
                                      scale_pos_weight=1, seed=27,
                                      reg_alpha=0.00006)
 
@@ -130,8 +116,8 @@ def run_sim():
     bfeatures = []
     seed = 0
     number_of_feat = 0
-    epochs = 2
-    for i in range(10):
+    epochs = 4
+    for i in range(1):
             
         #initially default parameters
         clf = get_clf()
@@ -139,7 +125,7 @@ def run_sim():
         #               learning_rate_init=0.1, warm_start=False)
         num_feat = random.randint(1,79)
         
-        features, train, test, y_train, y_test = split(num_feat,i)
+        features, train, test, y_train, y_test = split(79,i)
         
         print(i,"\n\n ***Running features:",num_feat,features,"***\n")
         
@@ -156,17 +142,20 @@ def run_sim():
         # clf.predict_proba(train_encoded[0:10])
         
 #         print("\nTesting\n\n")
-
-        test_score = clf.score(test_encoded, y_test)
-
+        log_y_train = list(map(lambda x: math.log(x), y_test))
+        log_pred = list(map(lambda x: math.log(x), clf.predict(test_encoded)))
+        test_score = math.sqrt(mean_squared_error(log_y_train, log_pred))
+        #test_score = sqrt(mean_squared_error(y_test,clf.predict(test_encoded)))
+        accuracy_score = clf.score(test_encoded, y_test)
         if test_score > scores:
             bfeatures = features
             scores = test_score
             seed = i
             number_of_feat = num_feat
 
-        print("\ncurrent Score:",test_score)
-        print("\nbest Score:",scores,"\n")
+        print("\nRMSE Score:",test_score)
+        print("\nbest Score:",scores)
+        print("\n Accuracy Score:",accuracy_score)
 
     
     print("\n\n best features:", bfeatures)

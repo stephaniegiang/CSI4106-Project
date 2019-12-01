@@ -7,9 +7,8 @@ import random
 from sklearn.tree import DecisionTreeRegressor
 import datetime
 import xgboost as xgb
-
-
-# In[2]:
+from sklearn.metrics import mean_squared_error
+import math
 
 
 X = pd.read_csv('data.csv')
@@ -85,14 +84,12 @@ def train_model(clf, X_train, y_train, epochs=3):
     return scores
 
 def get_clf():
-    temp = random.randint(1,80)
-    print("Seed value is : ",temp)
     return xgb.XGBRegressor(learning_rate=0.01,n_estimators=3460,
                                      max_depth=3, min_child_weight=0,
                                      gamma=0, subsample=0.7,
                                      colsample_bytree=0.7,
                                      objective='reg:squarederror', nthread=-1,
-                                     scale_pos_weight=1, seed=temp,
+                                     scale_pos_weight=1, seed=27,
                                      reg_alpha=0.00006)
 
 def run_best(best_features, epochs, filename):
@@ -158,7 +155,11 @@ def run_sim():
         
 #         print("\nTesting\n\n")
 
-        test_score = clf.score(test_encoded, y_test)
+        log_y_train = list(map(lambda x: math.log(x), y_test))
+        log_pred = list(map(lambda x: math.log(x), clf.predict(test_encoded)))
+        test_score = math.sqrt(mean_squared_error(log_y_train, log_pred))
+        #test_score = sqrt(mean_squared_error(y_test,clf.predict(test_encoded)))
+        accuracy_score = clf.score(test_encoded, y_test)
 
         if test_score > scores:
             bfeatures = features
@@ -168,6 +169,7 @@ def run_sim():
 
         print("\ncurrent Score:",test_score)
         print("\nbest Score:",scores,"\n")
+        print("\naccuracy Score:",accuracy_score)
 
     
     print("\n\n best features:", bfeatures)

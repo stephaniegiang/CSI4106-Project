@@ -7,32 +7,19 @@ import random
 from sklearn.tree import DecisionTreeRegressor
 import datetime
 import xgboost as xgb
+from sklearn.metrics import mean_squared_error
+import math
 
-
-# In[2]:
-
-
-X = pd.read_csv('data.csv')
-# X.head(10)
+X = pd.read_csv(r'C:\Users\owner\Downloads\trainingset_v2.csv')
 y = X.pop("SalePrice").values
 X.pop('Id') #not needed
-
-
 X2 = pd.read_csv('test.csv')
 ids = X2.pop('Id') #not needed
 
 def split(number_of_features=10, seed = 0):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=1)
-
-#     print(X_train.shape)
-#     print(y_test.shape)
     random.seed=seed
-
-    randomFeatures = ['SaleType', 'TotRmsAbvGrd', 'HouseStyle', 'Condition1', 'MasVnrArea', 'GarageQual', 'GarageFinish', 'KitchenAbvGr', 'GarageArea', '1stFlrSF', 'LandSlope', 'Electrical', 'MiscVal', 'Fireplaces', 'SaleCondition', 'EnclosedPorch', 'BsmtQual', 'BsmtFinSF1', 'OverallQual', 'FullBath', 'BsmtHalfBath', 'MSZoning', 'Neighborhood', 'MiscFeature', 'CentralAir', 'LandContour', 'Utilities', 'Heating', 'BsmtFinSF2', 'BedroomAbvGr', 'FireplaceQu', 'ExterCond', 'Exterior2nd', 'Fence', 'YearRemodAdd', 'BsmtFinType1', 'RoofStyle', 'BsmtFullBath', 'BsmtCond', 'PoolQC', 'BldgType', 'MSSubClass', 'GarageCars', 'GarageCond', 'OverallCond', 'PoolArea', 'OpenPorchSF', 'Functional', 'Foundation', '3SsnPorch', 'GrLivArea', 'ExterQual', 'Exterior1st', 'YearBuilt', 'GarageType', 'PavedDrive', 'MasVnrType', 'Alley', 'BsmtExposure', 'BsmtUnfSF']
-#     print(randomFeatures)
-
-    # TO DO - Finish the remaining encoding process
-
+    randomFeatures = random.sample(list(X), number_of_features)
     X_train = X_train[randomFeatures].copy()
     X_test = X_test[randomFeatures].copy()
     
@@ -85,14 +72,12 @@ def train_model(clf, X_train, y_train, epochs=3):
     return scores
 
 def get_clf():
-    temp = random.randint(1,80)
-    print("Seed value is : ",temp)
-    return xgb.XGBRegressor(learning_rate=0.01,n_estimators=3460,
+    return xgb.XGBRegressor(learning_rate=0.02,n_estimators=3460,
                                      max_depth=3, min_child_weight=0,
                                      gamma=0, subsample=0.7,
                                      colsample_bytree=0.7,
                                      objective='reg:squarederror', nthread=-1,
-                                     scale_pos_weight=1, seed=temp,
+                                     scale_pos_weight=1, seed=27,
                                      reg_alpha=0.00006)
 
 def run_best(best_features, epochs, filename):
@@ -140,9 +125,9 @@ def run_sim():
         #               learning_rate_init=0.1, warm_start=False)
         num_feat = random.randint(1,79)
         
-        features, train, test, y_train, y_test = split(num_feat,i)
+        features, train, test, y_train, y_test = split(79,i)
         
-        print(i,"\n\n ***Running features:",features,"***\n")
+        print(i,"\n\n ***Running features:",num_feat,features,"***\n")
         
         train_encoded, test_encoded = encode(train, test)
         
@@ -157,24 +142,27 @@ def run_sim():
         # clf.predict_proba(train_encoded[0:10])
         
 #         print("\nTesting\n\n")
-
-        test_score = clf.score(test_encoded, y_test)
-
+        log_y_train = list(map(lambda x: math.log(x), y_test))
+        log_pred = list(map(lambda x: math.log(x), clf.predict(test_encoded)))
+        test_score = math.sqrt(mean_squared_error(log_y_train, log_pred))
+        #test_score = sqrt(mean_squared_error(y_test,clf.predict(test_encoded)))
+        accuracy_score = clf.score(test_encoded, y_test)
         if test_score > scores:
             bfeatures = features
             scores = test_score
             seed = i
             number_of_feat = num_feat
 
-        print("\ncurrent Score:",test_score)
-        print("\nbest Score:",scores,"\n")
+        print("\nRMSE Score:",test_score)
+        print("\nbest Score:",scores)
+        print("\n Accuracy Score:",accuracy_score)
 
     
     print("\n\n best features:", bfeatures)
     print('best score:',scores)
     print('seed:',seed)
 
-    run_best(bfeatures,epochs,"predictions2.csv")
+    run_best(bfeatures,epochs,"predictions.csv")
 
 
 
@@ -185,6 +173,3 @@ def run_sim():
 
 print("running")
 run_sim()
-## best features: ['lotconfig', 'garagetype', 'housestyle', 'bsmtexposure', 'mszoning', 'halfbath', 'kitchenabvgr', 'salecondition', 'bldgtype', 'bsmtfintype2', 'lowqualfinsf', 'heating', 'landcontour', 'totrmsabvgrd', 'bsmtcond', 'saletype', 'garagecond', 'miscfeature', 'lotarea', '1stFlrSF', 'bsmtfullbath', 'totalbsmtsf', 'fence', 'centralair', 'utilities', 'screenporch', 'neighborhood', 'overallqual', 'heatingqc', 'lotshape', 'yearbuilt', 'garagequal', 'fireplaces', 'exterior2nd', 'garagearea', 'masvnrarea', 'kitchenqual', 'grlivarea', 'openporchsf', 'garageyrblt', 'electrical', 'paveddrive', 'functional', 'condition1', 'masvnrtype', 'poolqc', 'alley', 'lotfrontage', 'mosold', '3SsnPorch', 'foundation', 'roofstyle', 'exterior1st', 'miscval', 'garagefinish', 'overallcond', 'fullbath', 'mssubclass', 'bsmtfinsf1', 'poolarea', 'exterqual', 'garagecars', '2ndFlrSF', 'yrsold']
-##best score: 0.8875995907115668
-##seed: 22

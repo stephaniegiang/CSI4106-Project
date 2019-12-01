@@ -1,0 +1,3 @@
+features: ['PavedDrive', 'LotShape', 'TotRmsAbvGrd', 'OverallQual']
+ best score: 0.20576829292277474
+ seed: 50

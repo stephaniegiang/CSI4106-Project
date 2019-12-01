@@ -116,7 +116,7 @@ def find_best_feat(clf):
   seed = 0
   number_of_feat = 0
   epochs = 1
-  runs = 1500
+  runs = 200
   start = datetime.datetime.now()
   for i in range(runs):
     num_feat = random.randint(1,79)

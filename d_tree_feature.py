@@ -173,4 +173,4 @@ def get_xgb_v2():
     scale_pos_weight=1, seed=27,
     reg_alpha=0.00006)
 
-find_best_feat(get_random_forest_v1())
+find_best_feat(get_decision_tree_v1())

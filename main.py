@@ -13,7 +13,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 
 # read the train set data 
-X = pd.read_csv('trainingset_v2.csv)
+X = pd.read_csv('trainingset_v2.csv')
 y = X.pop("SalePrice").values
 X.pop('Id')
 

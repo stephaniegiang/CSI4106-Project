@@ -1,4 +1,4 @@
-name: xgb
+name: Gradient Booster
 
 on: [push]	
 

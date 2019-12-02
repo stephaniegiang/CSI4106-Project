@@ -22,15 +22,15 @@ X2 = pd.read_csv('test.csv')
 ids = X2.pop('Id')
 
 def split_train_test(number_of_features=10, seed = 0):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=1)
-    random.seed=seed
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=1)
+  random.seed=seed
 
-   randomFeatures = random.sample(list(X), number_of_features)
+  randomFeatures = random.sample(list(X), number_of_features)
 
-    X_train = X_train[randomFeatures].copy()
-    X_test = X_test[randomFeatures].copy()
+  X_train = X_train[randomFeatures].copy()
+  X_test = X_test[randomFeatures].copy()
     
-    return randomFeatures, X_train, X_test, y_train, y_test
+  return randomFeatures, X_train, X_test, y_train, y_test
 
 def is_number(s):
     """ Returns True is string is a number. """

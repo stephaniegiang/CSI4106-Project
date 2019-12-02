@@ -25,7 +25,7 @@ def split_train_test(number_of_features=10, seed = 0):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=1)
     random.seed=seed
 
-    randomFeatures = list(X)
+    randomFeatures = list(X, number_of_features)
 
     X_train = X_train[randomFeatures].copy()
     X_test = X_test[randomFeatures].copy()
@@ -121,7 +121,7 @@ def find_best_feat(clf):
   for i in range(runs):
     num_feat = random.randint(1,76)
     
-    features, train, test, y_train, y_test = split_train_test(number_of_feat,i)
+    features, train, test, y_train, y_test = split_train_test(num_feat,i)
     train_encoded, test_encoded = encode(train, test)
     train_model(clf, train_encoded, y_train, epochs)
 

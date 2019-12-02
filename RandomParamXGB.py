@@ -76,19 +76,18 @@ xgbA =xgb.XGBRegressor(learning_rate=0.01,n_estimators=3460,
                                      objective='reg:squarederror', nthread=-1,
                                      scale_pos_weight=1, seed=27,
                                      reg_alpha=0.00006)
-folds = 3
-param_comb = 5
+#folds = 5
+#param_comb = 5
 
-skf = StratifiedKFold(n_splits=folds, shuffle = True, random_state = 1001)
+skf = StratifiedKFold( shuffle = True, random_state = 1001)
 
 random_search = RandomizedSearchCV(xgbA, param_distributions=params,
-                                   n_iter=param_comb,
-                                   scoring='neg_mean_squared_error',
+                                   scoring='accuracy',
                                    n_jobs=4, cv=skf.split(train_encoded,y_train),
                                    verbose=3, random_state=1001 )
 
 random_search.fit(train_encoded, y_train)
-timer(start_time) # timing ends here for "start_time" variable
+#timer(start_time) # timing ends here for "start_time" variable
 print('\n All results:')
 print(random_search.cv_results_)
 print('\n Best estimator:')

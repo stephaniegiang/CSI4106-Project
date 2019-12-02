@@ -82,9 +82,7 @@ xgbA =xgb.XGBRegressor(learning_rate=0.01,n_estimators=3460,
 skf = StratifiedKFold( shuffle = True, random_state = 1001)
 
 random_search = RandomizedSearchCV(xgbA, param_distributions=params,
-                                   scoring='neg_mean_squared_log_error',
-                                   n_jobs=4, cv=skf.split(train_encoded,y_train),
-                                   verbose=3, random_state=1001 )
+                                   n_jobs=1,cv=2 )
 
 random_search.fit(train_encoded, y_train)
 #timer(start_time) # timing ends here for "start_time" variable

@@ -156,7 +156,13 @@ def get_decision_tree_v2():
   return DecisionTreeRegressor()
 
 def get_xgb_v1():
-  return xgb.XGBRegressor(learning_rate=0.01)
+  return xgb.XGBRegressor(learning_rate=0.01,n_estimators=3460,
+    max_depth=3, min_child_weight=0,
+    gamma=0, subsample=0.7,
+    colsample_bytree=0.7,
+    objective='reg:linear', nthread=-1,
+    scale_pos_weight=1, seed=27,
+    reg_alpha=0.00006)
 
 def get_xgb_v2():
   return xgb.XGBRegressor(learning_rate=0.02,n_estimators=3460,

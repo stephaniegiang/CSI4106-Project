@@ -116,10 +116,10 @@ def find_best_feat(clf):
   seed = 0
   number_of_feat = 0
   epochs = 1
-  runs = 200
+  runs = 500
   start = datetime.datetime.now()
   for i in range(runs):
-    num_feat = random.randint(1,79)
+    num_feat = random.randint(1,76)
     
     features, train, test, y_train, y_test = split_train_test(num_feat,i)
     train_encoded, test_encoded = encode(train, test)

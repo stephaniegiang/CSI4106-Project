@@ -116,7 +116,7 @@ def find_best_feat(clf):
   seed = 0
   number_of_feat = 0
   epochs = 1
-  runs = 500
+  runs = 200
   start = datetime.datetime.now()
   for i in range(runs):
     num_feat = random.randint(1,76)
@@ -156,7 +156,7 @@ def get_decision_tree_v2():
   return DecisionTreeRegressor(criterion='mae')
 
 def get_xgb_v1():
-  return xgb.XGBRegressor(learning_rate=0.01,n_estimators=3460,
+  return xgb.XGBRegressor(learning_rate=0.1,n_estimators=3460,
     max_depth=3, min_child_weight=0,
     gamma=0, subsample=0.7,
     colsample_bytree=0.7,
@@ -165,13 +165,11 @@ def get_xgb_v1():
     reg_alpha=0.00006)
 
 def get_xgb_v2():
-  return xgb.XGBRegressor(learning_rate=0.02,n_estimators=3460,
-    max_depth=3, min_child_weight=0,
-    gamma=0, subsample=0.7,
-    colsample_bytree=0.7,
-    objective='reg:linear', nthread=-1,
-    scale_pos_weight=1, seed=27,
-    reg_alpha=0.00006)
-
-find_best_feat(get_random_forest_v1())
-
+  return xgb.XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=0.7, gamma=0,
+             importance_type='gain', learning_rate=0.01, max_delta_step=0,
+             max_depth=3, min_child_weight=1, missing=None, n_estimators=3460,
+             n_jobs=1, nthread=-1, objective='reg:linear', random_state=0,
+             reg_alpha=6e-05, reg_lambda=1, scale_pos_weight=1, seed=27,
+             silent=None, subsample=0.7, verbosity=1)
+find_best_feat(get_xgb_v1())

@@ -119,6 +119,7 @@ def find_best_feat(clf):
   runs = 1500
   start = datetime.datetime.now()
   for i in range(runs):
+    clf = get_decision_tree_v1()
     num_feat = random.randint(1,76)
     
     features, train, test, y_train, y_test = split_train_test(num_feat,i)
@@ -141,7 +142,7 @@ def find_best_feat(clf):
   print('best score:',scores)
   print('seed:',seed)
 
-  run_with_feature(clf, bfeatures,epochs,"predictions.csv",seed)
+  run_with_feature(get_decision_tree_v1(), bfeatures,epochs,"predictions.csv",seed)
 
 def get_random_forest_v1():
   return RandomForestRegressor(n_estimators=20)
@@ -173,4 +174,4 @@ def get_xgb_v2():
     scale_pos_weight=1, seed=27,
     reg_alpha=0.00006)
 
-find_best_feat(get_decision_tree_v1())
+find_best_feat()

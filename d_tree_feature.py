@@ -110,7 +110,7 @@ def run_with_feature(clf, best_features, epochs, filename, seed):
     a.write('\n seed: '+str(seed))
     a.write('\n')
 
-def find_best_feat(clf):
+def find_best_feat():
   scores = -999
   bfeatures = []
   seed = 0

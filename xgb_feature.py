@@ -116,7 +116,7 @@ def find_best_feat():
   seed = 0
   number_of_feat = 0
   epochs = 1
-  runs = 200
+  runs = 150
   start = datetime.datetime.now()
   for i in range(runs):
     clf = get_xgb_v1()

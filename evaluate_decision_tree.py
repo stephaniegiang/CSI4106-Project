@@ -6,7 +6,7 @@ def get_v1():
   return DecisionTreeRegressor()
 
 def get_v2():
-  return DecisionTreeRegressor
+  return DecisionTreeRegressor(criterion='friedman_mse',max_depth = 10,max_features=None,presort=True,splitter='random')
 
 training_set, training_target, test_set, test_ids = helper.get_data()
 
@@ -37,12 +37,12 @@ helper.train_model(dc_v2_2, train_encoded2, y_train2, 1)
 helper.train_model(dc_v2_3, train_encoded3, y_train3, 1)
 
 rsme = []
-rsme.append(helper.rsme_eval(dc_v1_1, training_set, y_test1, test_encoded1))
-rsme.append(helper.rsme_eval(dc_v1_2, training_set, y_test2, test_encoded2))
-rsme.append(helper.rsme_eval(dc_v1_3, training_set, y_test3, test_encoded3))
-rsme.append(helper.rsme_eval(dc_v2_1, training_set, y_test1, test_encoded1))
-rsme.append(helper.rsme_eval(dc_v2_2, training_set, y_test2, test_encoded2))
-rsme.append(helper.rsme_eval(dc_v2_3, training_set, y_test3, test_encoded3))
+rsme.append(helper.rsme_eval(dc_v1_1, y_test1, test_encoded1))
+rsme.append(helper.rsme_eval(dc_v1_2, y_test2, test_encoded2))
+rsme.append(helper.rsme_eval(dc_v1_3, y_test3, test_encoded3))
+rsme.append(helper.rsme_eval(dc_v2_1, y_test1, test_encoded1))
+rsme.append(helper.rsme_eval(dc_v2_2, y_test2, test_encoded2))
+rsme.append(helper.rsme_eval(dc_v2_3, y_test3, test_encoded3))
 
 helper.run_predictions(get_v1(), feature_set_1, 1,"dc_v1_f1_predictions.csv", training_set, test_set, training_target, test_ids)
 helper.run_predictions(get_v1(), feature_set_2, 1,"dc_v1_f2_predictions.csv", training_set, test_set, training_target, test_ids)

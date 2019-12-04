@@ -33,7 +33,7 @@ for i in range(runs):
 
   y_predicted = clf.predict(train_encoded[0:10])
 
-  test_score = helper.rsme_eval(clf, training_set, y_test, test_encoded)
+  test_score = helper.rsme_eval(clf, y_test, test_encoded)
 
   if test_score < scores or scores == -999:
     bfeatures = features

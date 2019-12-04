@@ -16,3 +16,8 @@ For evaluating all v1 and v2 of the algorithms with the 3 different feature sets
 * evaluate_random_forest.py
 * evaluate_decision_tree.py
 * evaluate_gradient_boosting.py
+
+For doing model tuning, we used both grid search and randomized search:
+* grid_search_random_forest.py
+* grid_search_decision_tree.py
+* random_search_gradient_boosting.py

@@ -90,7 +90,7 @@ def train_model(clf, X_train, y_train, epochs=3):
   return scores
 
 # does root squared mean error evaluation 
-def rsme_eval(clf, x, y_test, test_encoded):
+def rsme_eval(clf, y_test, test_encoded):
   log_y_train = list(map(lambda x: log(x), y_test))
   log_pred = list(map(lambda x: log(x), clf.predict(test_encoded)))
   test_score = sqrt(mean_squared_error(log_y_train, log_pred))

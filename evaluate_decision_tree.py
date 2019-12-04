@@ -6,7 +6,7 @@ def get_v1():
   return DecisionTreeRegressor()
 
 def get_v2():
-  return DecisionTreeRegressor
+  return DecisionTreeRegressor(criterion='friedman_mse',max_depth = 10,max_features=None,presort=True,splitter='random')
 
 training_set, training_target, test_set, test_ids = helper.get_data()
 
